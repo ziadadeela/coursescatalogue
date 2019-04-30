@@ -16,18 +16,6 @@ def index(request):
   return render(request, 'index.html')
 
 
-# class IndexView(generic.ListView):
-#     template_name = 'polls/index.html'
-#     context_object_name = 'questions'
-#
-#     def get_queryset(self):
-#         """Return the last five published questions."""
-#         return Question.objects.filter(
-#             publish_date__lte=timezone.now(),
-#         ).order_by('-publish_date')[:5]
-
-
-
 class UserViewSet(viewsets.ModelViewSet):
   """
   API endpoint that allows users to be viewed or edited.
@@ -90,12 +78,23 @@ class CourseViewSet(viewsets.ModelViewSet):
           'name': 'professor__name',
           'type': 'text',
           'label': 'Professor',
+        },
+        {
+          'name': 'timeslots__start_time',
+          'type': 'time',
+          'label': 'Start Time',
+        },
+        {
+          'name': 'timeslots__end_time',
+          'type': 'time',
+          'label': 'End Time',
         }
       ],
       'headers': [
-        {'name': 'name', 'label': 'Name'},
-        {'name': 'cost', 'label': 'Cost'},
-        {'name': 'professor', 'label': 'Professor'},
+        {'name': 'name', 'label': 'Name', 'sortable': True},
+        {'name': 'cost', 'label': 'Cost', 'sortable': True},
+        {'name': 'professor', 'label': 'Professor', 'sortable': True},
+        {'name': 'timeslots', 'label': 'TimeSlots', 'sortable': False},
       ]
     }
     return Response(data)

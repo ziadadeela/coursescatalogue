@@ -20,21 +20,30 @@ class ProfessorSerializer(serializers.ModelSerializer):
 
 
 class TimeSlotSerializer(serializers.ModelSerializer):
+  start_time = serializers.TimeField(required=True)
+  end_time = serializers.TimeField(required=True)
+
+  # TODO: check this
+  def validate(self, data):
+    """
+    Check that start is before end.
+    """
+    if data['start_time'] > data['end_time']:
+      raise serializers.ValidationError("End time must be after start time")
+    return data
+
   class Meta:
     model = TimeSlot
-    fields = ('url', 'start_time', 'end_time')
+    fields = ('url', 'course', 'start_time', 'end_time')
 
 
 class CourseSerializer(serializers.ModelSerializer):
   name = serializers.CharField(max_length=30, required=True)
   cost = serializers.FloatField(required=True)
-  # TODO: this relation is not right
+
   timeslots = TimeSlotSerializer(read_only=True, source='timeslot_set', many=True)
+  professor = ProfessorSerializer(read_only=True)
 
   class Meta:
     model = Course
     fields = ('url', 'id', 'name', 'cost', 'professor', 'timeslots')
-
-#TODO: get professor name
-  def ger_professor(self,obj):
-    return obj.professor__name

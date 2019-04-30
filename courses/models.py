@@ -17,7 +17,7 @@ class Course(models.Model):
   professor = models.ForeignKey(Professor, on_delete=models.CASCADE)
 
   def __str__(self):
-    return 'Name: %s \nCost: %s' % (self.name, self.cost)
+    return self.name
 
   class Meta:
     ordering = ('name', 'cost', 'professor')

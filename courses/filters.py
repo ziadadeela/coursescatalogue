@@ -9,5 +9,7 @@ class CourseFilter(django_filters.FilterSet):
         fields = {
             'name': ['icontains'],
             'cost': ['exact'],
-            'professor__name': ['icontains']
+            'professor__name': ['icontains'],
+            # 'timeslots__start_time':['exact'],
+            # 'timeslots__end_time':['exact']
         }

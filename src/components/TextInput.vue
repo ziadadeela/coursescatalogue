@@ -13,7 +13,7 @@
   <div
     :class="`relative ${wrapperClass}`"
   >
-    <b-form-input
+    <input
       :type="type"
       :name="name"
       :value="value"
@@ -21,15 +21,16 @@
       :disabled="disabled"
       :maxlength="maxLength"
       :placeholder="placeholder"
-      :class=""
+      class="form-control"
       @blur="$emit('blur',$event.target.value)"
       @focus="$emit('focus',$event)"
       @change="$emit('change',$event)"
       @input="$emit('input',$event.target.value)"
-    ></b-form-input>
+      @keyup.enter="$emit('apply')"
+    >
     <button
       v-if="hasRemove && value"
-      class="clear-filter-button  flex items-center absolute pin-r pin-t mt-3 mr-3 cursor-pointer text-white text-xxs rounded-full"
+      class="clear-filter-button  "
       @click="$emit('clear')"
     >
       <font-awesome-icon

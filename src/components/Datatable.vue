@@ -23,12 +23,13 @@
             v-for="head in header"
             :key="head.name"
             class="pl-6 text-xs  whitespace-no-wrap relative cursor-pointer"
-            @click="$emit('sort',head.name)"
+            @click="handleSort(head)"
           >
               <span>
                 {{ head.label }}
               </span>
             <font-awesome-icon
+              v-if="head.sortable"
               :icon="`${sorting.column === null || sorting.column !== head.name ? 'sort' : (sorting.column === head.name && sorting.type === 'asc' ? 'sort-up' :'sort-down')}`"
               size="xs"/>
 
@@ -49,7 +50,13 @@
             :key="head.name"
             class="py-4 pl-6 text-sm "
           >
+            <span v-if="Array.isArray(getRowValue(row, head))"
+                  v-for="el in getRowValue(row, head)"
+                  class="td-multiple">
+                {{el}}
+            </span>
             <span
+              v-if="!Array.isArray(getRowValue(row, head))"
               dir="auto"
               class="whitespace-no-wrap"
             >
@@ -65,22 +72,6 @@
       </table>
     </div>
 
-    <div
-      v-if="rows.length > 0"
-      class=" text-xs my-3 pl-2"
-    >
-      Viewing {{ rows.length }} out of {{ pagination.total }}
-    </div>
-    <!--<Pagination-->
-    <!--v-if="pagination.lastPage > 1"-->
-    <!--:total-pages="pagination.lastPage"-->
-    <!--:total="pagination.total"-->
-    <!--:per-page="pagination.perPage"-->
-    <!--:current-page="pagination.currentPage"-->
-    <!--:per-page-enabled="perPageEnabled"-->
-    <!--@pagechanged="$emit('pagechanged', $event)"-->
-    <!--@perPage="$emit('perPage', $event)"-->
-    <!--/>-->
   </div>
 </template>
 
@@ -102,22 +93,9 @@
      * and are passed using the mixin
      */
     props: {
-      perPageEnabled: {
-        type: Boolean,
-        default: true
-      },
       isLoading: {
         type: Boolean,
         default: false
-      },
-      pagination: {
-        type: Object,
-        default: () => ({
-          lastPage: 1,
-          perPage: 15,
-          total: 0,
-          currentPage: 1
-        })
       },
       sorting: {
         type: Object,
@@ -136,25 +114,20 @@
         default: () => []
       }
     },
-    components: {Filters},
+    components: {Filters, Loading},
     methods: {
       getRowValue(row, {valueHandler, name}) {
-//        if(valueHandler && typeof valueHandler === "function"){
-//          return valueHandler(row)
-//        }
         return row[name];
+      },
+      handleSort(head) {
+        if (head.sortable) {
+          this.$emit('sort', head.name)
+        }
       }
     }
   }
 </script>
 
 <style lang="scss">
-  .cursor-pointer {
-    cursor: pointer;
-  }
-
-  .hidden {
-    display: none;
-  }
-
+  @import '../sass/_datatable.scss';
 </style>

@@ -22,6 +22,7 @@
   import {get as getCourses, getTableAtr as getCourseTableAttr} from './API/courseAPI'
   import sortingProvider from "./mixins/sortingProvider";
   import FiltersProvider from "./mixins/FiltersProvider";
+  import formatTime from './helpers/helpers'
 
   export default {
     name: 'app',
@@ -42,13 +43,25 @@
     methods: {
       getTableAttr() {
         getCourseTableAttr().then(({data}) => {
-          console.log(data);
 
           this.headers = data.headers;
           this.filters = data.filters;
 
         }).catch(error => {
           console.log('Error : ', error);
+        });
+      },
+      formatData(data) {
+        return data.map(object => {
+          return {
+            name: object.name,
+            cost: object.cost,
+            professor: object.professor.name,
+            timeslots: object.timeslots.map(timeslot => {
+              return `${timeslot.start_time} - ${timeslot.end_time}`;
+
+            })
+          }
         });
       },
       loadData({filters = {}, sorting = {}} = {}) {
@@ -68,71 +81,19 @@
 
         return getCourses(params).then(({data}) => {
 
-          this.rows = data.results;
-          console.log(data);
+          this.rows = this.formatData(data.results);
 
-
-//          this.headers = data.headers;
-//          this.filters = data.filters;
-//          this.sorting = data.sorting;
           this.loading = false;
 
-        }).catch(error => {
-          console.log('Error : ', error);
-        });
+        })
+//          .catch(error => {
+//            console.log('Error : ', error);
+//          });
       },
-      getCoursess() {
-        getCourses().then(response => {
-          this.courses = response.data;
-          this.rows = [
-            {id: 1, 'name': 'ziad', 'cost': 50, 'professor': 'ahmad'}
-          ];
-          this.headers = [
-            {name: 'name', label: 'Name'},
-            {name: 'cost', label: 'Cost'},
-            {name: 'professor', label: 'Professor'},
-
-          ];
-          this.filters = [
-            {
-              name: 'name',
-              type: 'text',
-              label: 'Name',
-              value: ''
-            }
-          ];
-//          console.log(this.courses);
-        });
-      }
     }
   }
 </script>
 
 <style lang="scss">
-  #app {
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-    margin-top: 60px;
-  }
-
-  h1, h2 {
-    font-weight: normal;
-  }
-
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
-
-  li {
-    display: inline-block;
-    margin: 0 10px;
-  }
-
-  a {
-    color: #42b983;
-  }
+  @import './sass/_courses.scss';
 </style>
