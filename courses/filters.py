@@ -4,7 +4,6 @@ from courses.models import Course
 
 
 class CourseFilter(django_filters.FilterSet):
-  # start_time = django_filters.filters.TimeFilter(field_name='timeslots__start_time', lookup_expr='exact')
 
   class Meta:
     model = Course

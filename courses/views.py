@@ -53,7 +53,6 @@ class CourseViewSet(viewsets.ModelViewSet):
   ordering_fields = ('name', 'cost','professor')
   ordering = ('name',)
 
-  # TODO: is it right?
 
   @list_route()
   def table_attr(self, request):
