@@ -4,12 +4,14 @@ from courses.models import Course
 
 
 class CourseFilter(django_filters.FilterSet):
-    class Meta:
-        model = Course
-        fields = {
-            'name': ['icontains'],
-            'cost': ['exact'],
-            'professor__name': ['icontains'],
-            # 'timeslots__start_time':['exact'],
-            # 'timeslots__end_time':['exact']
-        }
+  # start_time = django_filters.filters.TimeFilter(field_name='timeslots__start_time', lookup_expr='exact')
+
+  class Meta:
+    model = Course
+    fields = {
+      'name': ['icontains'],
+      'cost': ['exact'],
+      'professor__name': ['icontains'],
+      'timeslot__start_time':['exact'],
+      'timeslot__end_time':['exact']
+    }

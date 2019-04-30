@@ -47,14 +47,10 @@ class CourseViewSet(viewsets.ModelViewSet):
   queryset = Course.objects.all()
   serializer_class = CourseSerializer
   filter_backends = (filters.SearchFilter, DjangoFilterBackend, filters.OrderingFilter)
-  # TODO: Use this filter to support custom filtering [case-insensitive]
   filterset_class = CourseFilter
-  # TODO: return headers, filters with the data [user renderer maybe?]
-
-  # filterset_fields = ('name', 'professors__name')
 
   search_fields = ('name', 'professor__name')
-  ordering_fields = ('name', 'cost')
+  ordering_fields = ('name', 'cost','professor')
   ordering = ('name',)
 
   # TODO: is it right?
@@ -80,12 +76,12 @@ class CourseViewSet(viewsets.ModelViewSet):
           'label': 'Professor',
         },
         {
-          'name': 'timeslots__start_time',
+          'name': 'timeslot__start_time',
           'type': 'time',
           'label': 'Start Time',
         },
         {
-          'name': 'timeslots__end_time',
+          'name': 'timeslot__end_time',
           'type': 'time',
           'label': 'End Time',
         }
